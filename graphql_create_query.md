@@ -2,25 +2,18 @@
 
 This document provides a collection of GraphQL mutations and variable examples for managing Parent and Child Doctypes in Frappe using the bulkcreate mutation.
 
-## ⚙️ Bulk Create Query (Table MultiSelect)
+
+# 🔗 Frappe Option: Link
+
+## ⚙️ Bulk create parent records and update child names  query
 
 #### QUERY
 
-``` 
-mutation {
+``` GRAPHQL
+mutation BulkCreateItems($fields: [CreateDocInput!]!) {
   bulkCreate(
-    doctype: "ToDo"
-    fields: [
-      {
-        fields: "{ \"priority\": \"Medium\", \"description\": \"create Multiselect 1\", \"child_table\": [ { \"fields\": \"skkkom4kbt\" }, { \"fields\": \"nk2la9mvu3\" }, { \"fields\": \"tl8aq6urbt\" } ] }"
-      },
-      {
-        fields: "{ \"priority\": \"Medium\", \"description\": \"create Multiselect 2\", \"child_table\": [ { \"fields\": \"skkkom4kbt\" }, { \"fields\": \"nk2la9mvu3\" }, { \"fields\": \"tl8aq6urbt\" } ] }"
-      },
-      {
-        fields: "{ \"priority\": \"Medium\", \"description\": \"create Multiselect 3\", \"child_table\": [ { \"fields\": \"skkkom4kbt\" }, { \"fields\": \"nk2la9mvu3\" }, { \"fields\": \"tl8aq6urbt\" } ] }"
-      }
-    ]
+    doctype: "Item"
+    fields: $fields
   ) {
     status
     doctype
@@ -33,68 +26,66 @@ mutation {
 
 ```
 
-#### RESPONSE
+#### VARIBLES
 
-```
+
+``` GRAPHQL
+
 {
-    "data": {
-        "bulkCreate": {
-            "status": true,
-            "doctype": "ToDo",
-            "docs": [
-                {
-                    "name": "pkigh2a9kg",
-                    "fields": "{ \"priority\": \"Medium\", \"description\": \"create Multiselect 1\", \"child_table\": [ { \"fields\": \"3ps2tfa3ga\" }, { \"fields\": \"3psbe59pnd\" } ] }"
-                },
-                {
-                    "name": "pki8ifkdft",
-                    "fields": "{ \"priority\": \"Medium\", \"description\": \"create Multiselect 2\", \"child_table\": [  { \"fields\": \"3ps2tfa3ga\" }, { \"fields\": \"3psbe59pnd\" } ] }"
-                },
-                {
-                    "name": "pkibbnnnhu",
-                    "fields": "{ \"priority\": \"Medium\", \"description\": \"create Multiselect 3\", \"child_table\": [  { \"fields\": \"3ps2tfa3ga\" }, { \"fields\": \"3psbe59pnd\" } ] }"
-                }
-            ]
-        }
+  "fields": [
+    {
+      "fields": "{ \"item_code\": \"ITEM-0111\", \"item_name\": \"Test Product 1\", \"item_group\": \"Products\", \"stock_uom\": \"Nos\" }"
+    },
+    {
+      "fields": "{ \"item_code\": \"ITEM-0112\", \"item_name\": \"Test Product 2\", \"item_group\": \"Products\", \"stock_uom\": \"Nos\" }"
+    },
+    {
+      "fields": "{ \"item_code\": \"ITEM-0113\", \"item_name\": \"Test Product 3\", \"item_group\": \"Products\", \"stock_uom\": \"Nos\" }"
     }
-}
-```
-
-
-## ⚙️ Bulk Create Query (LINK)
-
-#### QUERY
-
-``` 
-mutation {
-    bulkCreate(
-        doctype: "Item"
-        fields: [
-            {
-                fields: "{ \"item_code\": \"ITEM-0001\", \"item_name\": \"Test Product 1\", \"item_group\": \"Products\",\"stock_uom\": \"Nos\"}"
-            }
-            {
-                fields: "{ \"item_code\": \"ITEM-0002\", \"item_name\": \"Test Product 2\", \"item_group\": \"Products\",\"stock_uom\": \"Nos\"}"
-            }
-            {
-                fields: "{ \"item_code\": \"ITEM-0003\", \"item_name\": \"Test Product 3\", \"item_group\": \"Products\",\"stock_uom\": \"Nos\"}"
-            }
-        ]
-    ) {
-        status
-        doctype
-        docs {
-            name
-            fields
-        }
-    }
+  ]
 }
 
 ```
 
-#### RESPONSE
+OR 
+
+``` GRAPHQL 
+{
+  "fields": [
+    {
+      "fields": {
+    "item_code": "ITEM-0211",
+    "item_name": "Test Product 1",
+    "item_group": "Products",
+    "stock_uom": "Nos"  # update child use name
+  }
+    },
+    {
+      "fields":  {
+    "item_code": "ITEM-0212",
+    "item_name": "Test Product 3",
+    "item_group": "Products",
+    "stock_uom": "Nos"  # update child use name  
+  }
+    },
+    {
+      "fields":  {
+    "item_code": "ITEM-0213",
+    "item_name": "Test Product 3",
+    "item_group": "Products",
+    "stock_uom": "Nos" # update child use name 
+  }
+    }
+  ]
+}
 
 ```
+
+### NOTE : Both JSON strings and JSON objects will be supported 
+
+#### RESPONSE 
+
+``` GRAPHQL
 {
     "data": {
         "bulkCreate": {
@@ -102,16 +93,16 @@ mutation {
             "doctype": "Item",
             "docs": [
                 {
-                    "name": "ITEM-0001",
-                    "fields": "{ \"item_code\": \"ITEM-0001\", \"item_name\": \"Test Product 1\", \"item_group\": \"Products\",\"stock_uom\": \"Nos\"}"
+                    "name": "ITEM-0111",
+                    "fields": "{ \"item_code\": \"ITEM-0111\", \"item_name\": \"Test Product 1\", \"item_group\": \"Products\", \"stock_uom\": \"Nos\" }"
                 },
                 {
-                    "name": "ITEM-0002",
-                    "fields": "{ \"item_code\": \"ITEM-0002\", \"item_name\": \"Test Product 2\", \"item_group\": \"Products\",\"stock_uom\": \"Nos\"}"
+                    "name": "ITEM-0112",
+                    "fields": "{ \"item_code\": \"ITEM-0112\", \"item_name\": \"Test Product 2\", \"item_group\": \"Products\", \"stock_uom\": \"Nos\" }"
                 },
                 {
-                    "name": "ITEM-0003",
-                    "fields": "{ \"item_code\": \"ITEM-0003\", \"item_name\": \"Test Product 3\", \"item_group\": \"Products\",\"stock_uom\": \"Nos\"}"
+                    "name": "ITEM-0113",
+                    "fields": "{ \"item_code\": \"ITEM-0113\", \"item_name\": \"Test Product 3\", \"item_group\": \"Products\", \"stock_uom\": \"Nos\" }"
                 }
             ]
         }
@@ -120,52 +111,15 @@ mutation {
 
 ```
 
-## ⚙️ Bulk Create Query (Table)
+
+## ⚙️ Bulk create parent records with child query
 
 #### QUERY
-``` 
-mutation {
-    bulkCreate(
-        doctype: "ToDo"
-        fields: [
-            {
-                fields: """
-                {
-                    "priority": "Medium",
-                    "description": "create table 1",
-                    "child_table": [
-                        { "test": "111", "nametest": "111" },
-                        { "test": "222", "nametest": "222" }
-                    ]
-                }
-                """
-            },
-            {
-                fields: """
-                {
-                    "priority": "Medium",
-                    "description": "create table 2",
-                    "child_table": [
-                        { "test": "333", "nametest": "333" },
-                        { "test": "444", "nametest": "444" }
-                    ]
-                }
-                """
-            },
-            {
-                fields: """
-                {
-                    "priority": "Medium",
-                    "description": "create table 3",
-                    "child_table": [
-                        { "test": "555", "nametest": "555" },
-                        { "test": "666", "nametest": "666" }
-                    ]
-                }
-                """
-            }
-        ]
-    ) {
+
+``` GRAPHQL
+
+mutation BulkCreateItems($fields: [CreateDocInput!]!) {
+    bulkCreate(doctype: "Item", fields: $fields) {
         status
         doctype
         docs {
@@ -174,11 +128,299 @@ mutation {
         }
     }
 }
-```
-
-#### RESPONSE
 
 ```
+
+#### VARIBLES
+
+
+``` GRAPHQL
+
+{
+    "fields": [
+        {
+            "fields": {
+                "item_code": "ITEM-0311",
+                "item_name": "Test Product 1",
+                "item_group": "Products",
+                "stock_uom": "Nos",
+                "child_table": [
+                    {
+                        "item_details": "test item_details", # create child table 
+                        "review": "test review"
+                    }
+                ]
+            }
+        },
+        {
+            "fields": {
+                "item_code": "ITEM-0312",
+                "item_name": "Test Product 3",
+                "item_group": "Products",
+                "stock_uom": "Nos",
+                "child_table": [
+                    {
+                        "item_details": "test item_details", # create child table 
+                        "review": "test review"
+                    }
+                ]
+            }
+        },
+        {
+            "fields": {
+                "item_code": "ITEM-0313",
+                "item_name": "Test Product 3",
+                "item_group": "Products",
+                "stock_uom": "Nos",
+                "child_table": [
+                    {
+                        "item_details": "test item_details",
+                        "review": "test review"                 # create child table 
+                    }
+                ]
+            }
+        }
+    ]
+}
+
+```
+
+#### RESPONSE 
+
+``` GRAPHQL
+{
+    "data": {
+        "bulkCreate": {
+            "status": true,
+            "doctype": "Item",
+            "docs": [
+                {
+                    "name": "ITEM-0311",
+                    "fields": {
+                        "item_code": "ITEM-0311",
+                        "item_name": "Test Product 1",
+                        "item_group": "Products",
+                        "stock_uom": "Nos",
+                        "doctype": "Item"
+                    }
+                },
+                {
+                    "name": "ITEM-0312",
+                    "fields": {
+                        "item_code": "ITEM-0312",
+                        "item_name": "Test Product 3",
+                        "item_group": "Products",
+                        "stock_uom": "Nos",
+                        "doctype": "Item"
+                    }
+                },
+                {
+                    "name": "ITEM-0313",
+                    "fields": {
+                        "item_code": "ITEM-0313",
+                        "item_name": "Test Product 3",
+                        "item_group": "Products",
+                        "stock_uom": "Nos",
+                        "doctype": "Item"
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+# 🔗 Frappe Option: Table
+
+## ⚙️ Bulk create parent records and create child query
+
+
+#### QUERY
+
+``` GRAPHQL
+mutation BulkCreateItems($fields: [CreateDocInput!]!) {
+  bulkCreate(
+    doctype: "Item"
+    fields: $fields
+  ) {
+    status
+    doctype
+    docs {
+      name
+      fields
+    }
+  }
+}
+
+```
+
+#### VARIBLES
+
+
+``` GRAPHQL
+{
+    "fields": [
+        {
+            "fields": {
+                "item_code": "ITEM-0411",
+                "item_name": "Test Product 1",
+                "item_group": "Products",
+                "stock_uom": "Nos",
+                "child_table": [
+                    {
+                        "item_details": "test item_details",
+                        "review": "test review"
+                    }
+                ]
+            }
+        },
+        {
+            "fields": {
+                "item_code": "ITEM-0412",
+                "item_name": "Test Product 3",
+                "item_group": "Products",
+                "stock_uom": "Nos",
+                "child_table": [
+                    {
+                        "item_details": "test item_details",
+                        "review": "test review"
+                    }
+                ]
+            }
+        },
+        {
+            "fields": {
+                "item_code": "ITEM-0413",
+                "item_name": "Test Product 3",
+                "item_group": "Products",
+                "stock_uom": "Nos",
+                "child_table": [
+                    {
+                        "item_details": "test item_details",
+                        "review": "test review"
+                    },
+                    {
+                        "item_details": "test item_details",
+                        "review": "test review"
+                    }
+                ]
+            }
+        }
+    ]
+}
+
+```
+
+#### RESPONSE 
+
+``` GRAPHQL
+{
+    "data": {
+        "bulkCreate": {
+            "status": true,
+            "doctype": "Item",
+            "docs": [
+                {
+                    "name": "ITEM-0411",
+                    "fields": {
+                        "item_code": "ITEM-0411",
+                        "item_name": "Test Product 1",
+                        "item_group": "Products",
+                        "stock_uom": "Nos",
+                        "doctype": "Item"
+                    }
+                },
+                {
+                    "name": "ITEM-0412",
+                    "fields": {
+                        "item_code": "ITEM-0412",
+                        "item_name": "Test Product 3",
+                        "item_group": "Products",
+                        "stock_uom": "Nos",
+                        "doctype": "Item"
+                    }
+                },
+                {
+                    "name": "ITEM-0413",
+                    "fields": {
+                        "item_code": "ITEM-0413",
+                        "item_name": "Test Product 3",
+                        "item_group": "Products",
+                        "stock_uom": "Nos",
+                        "doctype": "Item"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+```
+
+
+# 🔗 Frappe Option: Table MultiSelect
+
+## ⚙️ Bulk create parent records and update child names
+
+
+#### QUERY
+
+``` GRAPHQL
+mutation BulkCreateToDo($fields: [CreateDocInput!]!) {
+    bulkCreate(doctype: "ToDo", fields: $fields) {
+        status
+        doctype
+        docs {
+            name
+            fields
+        }
+    }
+}
+
+```
+
+
+#### VARIBLES
+
+
+``` GRAPHQL
+{
+    "fields": [
+        {
+            "fields": {
+                "priority": "Medium",
+                "description": "create Multiselect 1",
+                "child_table": [
+                    {
+                        "fields": "3ps2tfa3ga"
+                    },
+                    {
+                        "fields": "3psbe59pnd"
+                    }
+                ]
+            }
+        },
+        {
+            "fields": {
+                "priority": "Medium",
+                "description": "create Multiselect 2",
+                "child_table": [
+                    {
+                        "fields": "3ps2tfa3ga"
+                    },
+                    {
+                        "fields": "3psbe59pnd"
+                    }
+                ]
+            }
+        }
+    ]
+}
+```
+
+#### RESPONSE 
+
+```GRAPHQL
 {
     "data": {
         "bulkCreate": {
@@ -186,21 +428,24 @@ mutation {
             "doctype": "ToDo",
             "docs": [
                 {
-                    "name": "h8tb0nisre",
-                    "fields": "{ \"priority\": \"Medium\", \"description\": \"create table 1\", \"child_table\": [ { \"test\": \"111\", \"nametest\": \"111\" }, { \"test\": \"222\", \"nametest\": \"222\" } ] }"
+                    "name": "e8q3biuu4t",
+                    "fields": {
+                        "priority": "Medium",
+                        "description": "create Multiselect 1",
+                        "doctype": "ToDo"
+                    }
                 },
                 {
-                    "name": "h8t68e6ahv",
-                    "fields": "{ \"priority\": \"Medium\", \"description\": \"create table 2\", \"child_table\": [ { \"test\": \"333\", \"nametest\": \"333\" }, { \"test\": \"444\", \"nametest\": \"444\" } ] }"
-                },
-                {
-                    "name": "h8ukjufb10",
-                    "fields": "{ \"priority\": \"Medium\", \"description\": \"create table 3\", \"child_table\": [ { \"test\": \"555\", \"nametest\": \"555\" }, { \"test\": \"666\", \"nametest\": \"666\" } ] }"
+                    "name": "e8rokh32kr",
+                    "fields": {
+                        "priority": "Medium",
+                        "description": "create Multiselect 2",
+                        "doctype": "ToDo"
+                    }
                 }
             ]
         }
     }
 }
-
 
 ```
